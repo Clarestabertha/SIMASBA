@@ -10,13 +10,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- Load Vite generated CSS -->
+    @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
+
     <!-- Styles -->
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
         body {
             font-family: 'Poppins', sans-serif;
             background-image: url('storage/img/bg welcome page.png'); /* Gambar latar belakang */
@@ -24,88 +24,36 @@
             background-repeat: no-repeat; /* Agar gambar tidak berulang */
             background-position: center; /* Pusatkan gambar */      
         }
-
-        .konten {
-            max-width: 50%;
-            height: auto;
-        }
-
-        .logo {
-            position: absolute;
-            top: 30px;
-            left: 30px; /* Mengubah dari right ke left */
-        }
-
-        .judul {
-            font-size: 40px;
-            color: #2D2A6C;
-            margin-bottom: 20px;
-        }
-
-        .kontainer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Mengisi tinggi layar */
-            text-align: center;
-        }
-
-        .kontainer .konten {
-            max-width: 50%;
-            height: auto;
-            margin-right: 20px;
-        }
-
-        .kontainer .judul {
-            max-width: 80%;
-            text-align: left;
-            margin-left:50px;
-        }
-
-        .kontainer .actions {
-            margin-top: 20px;
-        }
-
-        .actions a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #FF2D20;
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            transition: background-color 0.3s;
-            float : left;
-            margin-left:50px;
-
-        }
-
-        .actions a:hover {
-            background-color: #d0241c;
-        }
     </style>
 </head>
-<body>
-    <img src="{{ asset('/storage/img/logo kai.png') }}" class="logo" alt="Logo KAI">
-
-    <div class="kontainer">
-        <img src="{{ asset('/storage/img/konten welcome.jpg') }}" class="konten" alt="Konten Welcome">
-        <div class="text">
-            <h1 class="judul">Sistem Informasi Manajemen Stasiun dan Bangunan Dinas DAOP V (SIMASBA)</h1>
-            <div class="actions">
+<body class="relative flex items-center justify-center min-h-screen text-center">
+    <img src="{{ asset('/storage/img/logo kai.png') }}" class="absolute top-8 left-8 w-40" alt="Logo KAI">
+    <div class="flex flex-col sm:flex-row items-center justify-center p-4 sm:p-8 rounded-lg">
+        <img src="{{ asset('/storage/img/konten welcome.png') }}" class="w-full sm:w-1/2 lg:w-1/2 max-w-3xl h-auto mb-4 sm:mb-0 sm:mr-8" alt="Konten Welcome">
+        <div class="flex flex-col items-center sm:items-start text-center sm:text-left">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-4">
+                Sistem Informasi Manajemen Stasiun dan Bangunan Dinas DAOP V (SIMASBA)
+            </h1>
+            <div class="actions space-y-2">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}">Dashboard</a>
+                        <a href="{{ url('/dashboard') }}" class="inline-block px-6 py-2 bg-secondary text-white rounded-full transition duration-300 hover:bg-red-700">
+                            Dashboard
+                        </a>
                     @else
-                        <a href="{{ route('login') }}">Log in</a>
+                        <a href="{{ route('login') }}" class="inline-block px-6 py-2 bg-secondary text-white rounded-full transition duration-300 hover:bg-red-700">
+                            Log in
+                        </a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}" class="inline-block px-6 py-2 bg-secondary text-white rounded-full transition duration-300 hover:bg-red-700">
+                                Register
+                            </a>
                         @endif
                     @endauth
                 @endif
             </div>
         </div>
     </div>
-
 </body>
 </html>
