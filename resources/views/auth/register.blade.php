@@ -8,7 +8,7 @@
         <!-- Bagian Formulir -->
         <div class="flex-1 flex flex-col items-center justify-center p-4">
             <!-- Logo KAI -->
-            <img src="{{ asset('/storage/img/logo kai.png') }}" alt="Logo KAI" class="w-40 mb-2">
+            <img src="{{ asset('/storage/img/logo kai.png') }}" alt="Logo KAI" class="w-20 mb-2">
             <p class="text-2xl font-bold mb-1">Registrasi</p>
 
             <!-- Formulir Pendaftaran -->

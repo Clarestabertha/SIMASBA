@@ -27,7 +27,7 @@
     </style>
 </head>
 <body class="relative flex items-center justify-center min-h-screen text-center">
-    <img src="{{ asset('/storage/img/logo kai.png') }}" class="absolute top-8 left-8 w-40" alt="Logo KAI">
+    <img src="{{ asset('/storage/img/logo kai.png') }}" class="absolute top-8 left-8 w-20" alt="Logo KAI">
     <div class="flex flex-col sm:flex-row items-center justify-center p-4 sm:p-8 rounded-lg">
         <img src="{{ asset('/storage/img/konten welcome.png') }}" class="w-full sm:w-1/2 lg:w-1/2 max-w-3xl h-auto mb-4 sm:mb-0 sm:mr-8" alt="Konten Welcome">
         <div class="flex flex-col items-center sm:items-start text-center sm:text-left">

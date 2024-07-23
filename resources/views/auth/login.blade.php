@@ -2,7 +2,7 @@
     <div class="bg-white min-h-screen flex">
         <!-- Bagian Formulir -->
         <div class="flex-1 flex flex-col items-center justify-center p-4">
-        <img src="{{ asset('/storage/img/logo kai.png') }}" alt="Logo KAI" class="w-40">
+        <img src="{{ asset('/storage/img/logo kai.png') }}" alt="Logo KAI" class="w-20">
             <p class="text-2xl font-bold mb-6">Login</p>
 
             <form method="POST" action="{{ route('login') }}"class="w-full max-w-md">

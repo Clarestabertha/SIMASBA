@@ -17,6 +17,7 @@ export default {
             colors: {
                 primary: '#2D2A6C',
                 secondary: '#EC6A28',
+                ketiga: '#CFDFEE',
             },
         },
     },
