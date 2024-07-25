@@ -2,4 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-navbar {
+    background-image: url('/storage/img/konten dashboard manajer.png');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    height: 64px; /* Sesuaikan dengan tinggi navbar */
+}
 
+.bg-white {
+    background-color: #ffffff;
+}
+
+.gradient-text {
+    background: linear-gradient(to right,#2D2A6C, #EC6A28); /* Gradasi antara secondary dan primary */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.gradient-card-1 {
+    background: linear-gradient(to right, #F56D28, #FFD39E);
+}
+
+.gradient-card-2 {
+    background: linear-gradient(to right, #18A955, #E1FFEE);
+}
+
+.gradient-card-3 {
+    background: linear-gradient(to right, #D9DEFA, #2D2A6C);
+}

@@ -15,15 +15,7 @@
         <!-- Scripts -->
         @vite('resources/css/app.css')
         @vite('resources/js/app.js')
-        <style>
-            .bg-navbar {
-                background-image: url('/storage/img/konten dashboard manajer.png');
-                background-size: cover; /* atau 'contain' tergantung kebutuhan */
-                background-position: top center; /* Menempatkan gambar di bagian atas */
-                background-repeat: no-repeat;
-                height: 64px; /* Sesuaikan dengan tinggi navbar */
-            }
-        </style>
+        
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-white">
@@ -39,9 +31,10 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="mb-80"> <!-- Menambahkan margin-top besar -->
                 {{ $slot }}
             </main>
         </div>
+        <x-footer class="mt-10" />
     </body>
 </html>

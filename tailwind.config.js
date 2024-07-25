@@ -18,6 +18,18 @@ export default {
                 primary: '#2D2A6C',
                 secondary: '#EC6A28',
                 ketiga: '#CFDFEE',
+                abu : '#C1C1C1',
+            },
+            width:{
+                '128':'32rem',
+                '100':'29rem',
+            },
+            height:{
+                '80':'20rem',
+                '72':'18rem',
+            },
+            fontSize: {
+                '5xl': '3rem', 
             },
         },
     },
