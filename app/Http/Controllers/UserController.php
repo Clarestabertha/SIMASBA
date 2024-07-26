@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View; // Pastikan untuk mengimpor View
+use Illuminate\View\View;
 use App\Models\User;
 
 class UserController extends Controller
@@ -12,24 +12,49 @@ class UserController extends Controller
 {
     $search = $request->input('search');
 
-    // Query untuk mengambil pengguna berdasarkan pencarian (case-insensitive)
+    // Query dengan kondisi pencarian dan urutan
     $users = User::query()
-        ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
-        ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($search) . '%'])
+        ->where(function($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+        })
         ->orderByRaw("CASE
             WHEN persetujuan IS NULL THEN 1
             WHEN persetujuan = 'approved' THEN 2
             WHEN persetujuan = 'rejected' THEN 3
         END")
-        ->get();
+        ->paginate(10);
 
     if ($request->ajax()) {
-        return response()->json(['users' => $users]);
+        $permintaanregis = User::whereNull('persetujuan')->count();
+        $asmen = User::where('role', 'asisten_manajer')
+                     ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                     ->count();
+        $pekerjalapangan = User::where('role', 'pekerja_lapangan')
+                              ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                              ->count();
+
+        return response()->json([
+            'users' => $users,
+            'permintaanregis' => $permintaanregis,
+            'asmen' => $asmen,
+            'pekerjalapangan' => $pekerjalapangan,
+        ]);
     }
 
-    return view('manajer.permintaan_regis', compact('users'));
+    $permintaanregis = User::whereNull('persetujuan')->count();
+    $asmen = User::where('role', 'asisten_manajer')
+                 ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                 ->count();
+    $pekerjalapangan = User::where('role', 'pekerja_lapangan')
+                          ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                          ->count();
+
+    return view('manajer.permintaan_regis', compact('users', 'permintaanregis', 'asmen', 'pekerjalapangan'));
 }
-   public function approve(User $user)
+
+
+    public function approve(User $user)
     {
         $user->update(['persetujuan' => 'approved']);
         return response()->json(['status' => 'approved']);
@@ -40,4 +65,5 @@ class UserController extends Controller
         $user->update(['persetujuan' => 'rejected']);
         return response()->json(['status' => 'rejected']);
     }
+
 }
