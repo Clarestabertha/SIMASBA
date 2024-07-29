@@ -24,4 +24,14 @@ class KerusakanController extends Controller
 
         return view('manajer.kerusakan', compact('kerusakan'));
     }
+    public function show ($id_kerusakan){
+            $kerusakan = Kerusakan::findOrFail($id_kerusakan);
+            return view('manajer.kerusakan_show', compact('kerusakan'));
+    }
+    public function destroy($id_kerusakan){
+        $kerusakan = Kerusakan::findOrFail($id_kerusakan);
+        $kerusakan->delete();
+        return redirect()->route('kerusakan.index')->with('success', 'Data kerusakan berhasil dihapus');
+    }
+
 }

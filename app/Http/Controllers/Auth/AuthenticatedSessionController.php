@@ -39,7 +39,16 @@ class AuthenticatedSessionController extends Controller
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-        return redirect()->intended(route('dashboard', absolute: false));
+
+        // Arahkan pengguna berdasarkan peran mereka
+        switch ($user->role) {
+            case 'pekerja_lapangan':
+                return redirect()->route('homepage.pekerja');
+            case 'asisten_manajer':
+                return redirect()->route('homepage.asisten_manajer');
+            case 'manajer':
+                return redirect()->route('dashboard');
+        }
     }
 
     return redirect()->back()->withErrors([

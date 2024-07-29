@@ -12,8 +12,8 @@
             <div class="flex justify-center">
                 <div class="w-full max-w-4xl px-4 sm:px-8 py-4 overflow-x-auto">
                     <div class="my-2 flex flex-row-reverse mt-20">
-                        <div class="relative w-50">
-                            <form method="GET" action="{{ route('kerusakan.index') }}">
+                        <div class="relative w-50 flex items-center">
+                            <form method="GET" action="{{ route('kerusakan.index') }}" class="flex items-center">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                     <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current text-black ml-1">
                                         <path d="M10 2a8 8 0 015.293 13.707L22 21.414 20.586 23l-6.707-6.707A8 8 0 1110 2zm0 2a6 6 0 100 12A6 6 0 0010 4z"></path>
@@ -21,15 +21,15 @@
                                 </span>
                                 <input name="search" placeholder="Cari data" class="appearance-none rounded-full border-2 border-black block pl-10 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-black focus:bg-white focus:placeholder-primary focus:text-gray-700 focus:outline-none" value="{{ Request::get('search') }}" />
                             </form>
+                            <a href="#" class="ml-4 bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-200">
+                                Insert
+                            </a>
                         </div>
                     </div>
                     <div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
                         <table class="min-w-full leading-normal">
                             <thead>
                                 <tr>
-                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
-                                        Nama
-                                    </th>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
                                         Tanggal
                                     </th>
@@ -40,6 +40,9 @@
                                         Lokasi Kerusakan
                                     </th>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Status
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
                                         Aksi
                                     </th>
                                 </tr>
@@ -48,9 +51,6 @@
                                 @foreach($kerusakan as $k)
                                     <tr class="bg-white">
                                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p>{{ $k->nama_pelapor }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                             <p class="text-gray-900 whitespace-no-wrap">{{ $k->tanggal }}</p>
                                         </td>
                                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
@@ -58,6 +58,9 @@
                                         </td>
                                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                             <p class="text-gray-900 whitespace-no-wrap">{{ $k->lokasi }}</p>
+                                        </td>
+                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                            <p class="text-gray-900 whitespace-no-wrap">{{ $k->status }}</p>
                                         </td>
                                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                             <div class="flex justify-center space-x-2">

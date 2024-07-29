@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" 
+<nav x-data="{ open: false }"
      @if(request()->routeIs('dashboard'))
          class="bg-navbar transition-all"
      @else
@@ -16,18 +16,49 @@
 
             <!-- Navigation Links -->
             <div class="flex items-center space-x-8 ms-8">
-                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Beranda') }}
-                </x-nav-link>
-                <x-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
-                    {{ __('Permintaan Registrasi') }}
-                </x-nav-link>
-                <x-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
-                    {{ __('Kerusakan') }}
-                </x-nav-link>
-                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Tindak Lanjut') }}
-                </x-nav-link>
+                @if(Auth::check())
+                    @php
+                        $user = Auth::user();
+                    @endphp
+
+                    @if($user->role === 'manajer')
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Beranda') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
+                            {{ __('Permintaan Registrasi') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
+                            {{ __('Kerusakan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('tindaklanjut')" :active="request()->routeIs('tindaklanjut')">
+                            {{ __('Tindak Lanjut') }}
+                        </x-nav-link>
+                    @elseif($user->role === 'pekerja_lapangan')
+                        <x-nav-link :href="route('homepage.pekerja')" :active="request()->routeIs('homepage.pekerja')">
+                            {{ __('Beranda') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('kerusakan.pekerja')" :active="request()->routeIs('kerusakan.pekerja')">
+                            {{ __('Kerusakan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('tindaklanjut.pekerja')" :active="request()->routeIs('tindaklanjut.pekerja')">
+                            {{ __('Tindak Lanjut') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('panduan')" :active="request()->routeIs('panduan')">
+                            {{ __('Panduan') }}
+                        </x-nav-link>
+                    @elseif($user->role === 'asisten_manajer')
+                        <x-nav-link :href="route('homepage.asisten_manajer')" :active="request()->routeIs('homepage.asisten_manajer')">
+                            {{ __('Beranda') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('kerusakan.asisten_manajer')" :active="request()->routeIs('kerusakan.asisten_manajer')">
+                            {{ __('Kerusakan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('tindaklanjut.asisten_manajer')" :active="request()->routeIs('tindaklanjut.asisten_manajer')">
+                            {{ __('Tindak Lanjut') }}
+                        </x-nav-link>
+                    @endif
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -35,7 +66,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md bg-transparent focus:outline-none transition ease-in-out duration-150">
-                        <img src="{{ asset('storage/img/profil icon.png') }}" class="h-8 w-8 rounded-full" alt="Profile Icon">
+                            <img src="{{ asset('storage/img/profil icon.png') }}" class="h-8 w-8 rounded-full" alt="Profile Icon">
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 010-1.414z" clip-rule="evenodd" />
@@ -52,7 +83,6 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -77,26 +107,50 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
-                {{ __('Permintaan Registrasi') }}
-            </x-responsive-nav-link>
-        </div>
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
-                {{ __('Kerusakan') }}
-            </x-responsive-nav-link>
-        </div>
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Tindak Lanjut') }}
-            </x-responsive-nav-link>
-        </div>
+        @if(Auth::check())
+            @php
+                $user = Auth::user();
+            @endphp
+
+            @if($user->role === 'manajer')
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Beranda') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
+                    {{ __('Permintaan Registrasi') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
+                    {{ __('Kerusakan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('tindaklanjut')" :active="request()->routeIs('tindaklanjut')">
+                    {{ __('Tindak Lanjut') }}
+                </x-responsive-nav-link>
+            @elseif($user->role === 'pekerja_lapangan')
+                <x-responsive-nav-link :href="route('homepage.pekerja')" :active="request()->routeIs('homepage.pekerja')">
+                    {{ __('Beranda') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kerusakan.pekerja')" :active="request()->routeIs('kerusakan.pekerja')">
+                    {{ __('Kerusakan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('tindaklanjut.pekerja')" :active="request()->routeIs('tindaklanjut.pekerja')">
+                    {{ __('Tindak Lanjut') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('panduan')" :active="request()->routeIs('panduan')">
+                    {{ __('Panduan') }}
+                </x-responsive-nav-link>
+            @elseif($user->role === 'asisten_manajer')
+                <x-responsive-nav-link :href="route('homepage.asisten_manajer')" :active="request()->routeIs('homepage.asisten_manajer')">
+                    {{ __('Beranda') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kerusakan.asisten_manajer')" :active="request()->routeIs('kerusakan.asisten_manajer')">
+                    {{ __('Kerusakan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('tindaklanjut.asisten_manajer')" :active="request()->routeIs('tindaklanjut.asisten_manajer')">
+                    {{ __('Tindak Lanjut') }}
+                </x-responsive-nav-link>
+            @endif
+        @endif
+
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">

@@ -17,11 +17,11 @@ return new class extends Migration
             $table->date('tanggal');
             $table->string('sumber_laporan', 100);
             $table->string('lokasi',50);
-            $table->string('deskripsi', 100);
-            $table->string('personel');
-            $table->date('tgl_perbaikan');
-            $table->string('foto_kerusakan');
-            $table->string('status');
+            $table->string('deskripsi', 500);
+            $table->string('personel')->nullable();
+            $table->date('tgl_perbaikan')->nullable();
+            $table->string('foto_kerusakan')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
