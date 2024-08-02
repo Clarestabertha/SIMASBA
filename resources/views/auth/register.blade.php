@@ -2,7 +2,7 @@
     <div class="bg-white min-h-screen flex">
         <!-- Bagian Gambar -->
         <div class="flex-1 flex items-center justify-center relative overflow-hidden">
-            <div class="absolute inset-0" style="background-image: url('{{ asset('/storage/img/register.png') }}'); background-size: 100% 100%; background-repeat: no-repeat; background-position: center;"></div>
+        <div class="absolute inset-0" style="background-image: url('{{ asset('/storage/img/regis.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;"></div>
         </div>
 
         <!-- Bagian Formulir -->

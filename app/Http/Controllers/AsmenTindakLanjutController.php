@@ -21,8 +21,15 @@ class AsmenTindakLanjutController extends Controller
                       ->orWhere('personel', 'LIKE', "%{$search}%")
                       ->orWhere('sumber', 'LIKE', "%{$search}%");
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(10); // Gunakan paginate() langsung setelah query builder
 
         return view('asmen.tindaklanjut', compact('tindaklanjut'));
     }
+    public function show($id_tl)
+{
+    $tindaklanjut = Tindaklanjut::findOrFail($id_tl);
+    $tindaklanjut->foto = explode(',', $tindaklanjut->foto);
+    return view('manajer.tindaklanjut_show', compact('tindaklanjut'));
+}
 }

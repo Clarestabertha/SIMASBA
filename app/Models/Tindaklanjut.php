@@ -13,7 +13,7 @@ class Tindaklanjut extends Model
     protected $table = 'tindaklanjut';
 
     // Jika tabel tidak menggunakan timestamp
-    public $timestamps = false;
+    public $timestamps = true;
     protected $primaryKey = 'id_tl';
 
     // Kolom yang dapat diisi secara massal
@@ -27,5 +27,8 @@ class Tindaklanjut extends Model
         'sumber',
         'foto',
         'status',
+    ];
+    protected $attributes = [
+        'status' => 'sedang diproses',
     ];
 }

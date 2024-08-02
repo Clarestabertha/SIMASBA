@@ -33,3 +33,13 @@
 .gradient-card-3 {
     background: linear-gradient(to right, #D9DEFA, #2D2A6C);
 }
+.gradient-card-4 {
+    background: linear-gradient(to right, #FFD39E, #F56D28);
+}
+
+.gradient-card-5 {
+    background: linear-gradient(to right, #2D2A6C, #D9DEFA);
+}
+.gradient-bg{
+    background: linear-gradient(to right, #C1C1C1, #2D2A6C);
+}

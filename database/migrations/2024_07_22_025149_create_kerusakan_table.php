@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('deskripsi', 500);
             $table->string('personel')->nullable();
             $table->date('tgl_perbaikan')->nullable();
-            $table->string('foto_kerusakan')->nullable();
-            $table->string('status')->nullable();
+            $table->string('foto_kerusakan',500);
+            $table->string('status')->default('sedang diproses');
             $table->timestamps();
         });
     }

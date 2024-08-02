@@ -23,12 +23,14 @@
                             </form>
                         </div>
                     </div>
+
+                    <!-- Tabel Gabungan -->
                     <div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
                         <table class="min-w-full leading-normal">
                             <thead>
                                 <tr>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
-                                        Nama Pelapor
+                                        Nama
                                     </th>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
                                         Tanggal
@@ -43,131 +45,184 @@
                                         Sumber Laporan
                                     </th>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Status
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
                                         Aksi
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="user-table-body">
-                                @foreach($tindaklanjut as $tl)
-                                    <tr class="bg-white">
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p>{{ $tl->nama_pelapor }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p class="text-gray-900 whitespace-no-wrap">{{ $tl->tanggal }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p class="text-gray-900 whitespace-no-wrap">{{ $tl->lokasi }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p class="text-gray-900 whitespace-no-wrap">{{ $tl->personel }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <p class="text-gray-900 whitespace-no-wrap">{{ $tl->sumber }}</p>
-                                        </td>
-                                        <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                            <div class="flex justify-center space-x-2">
-                                                <!-- Icon Detail -->
-                                                <a href="{{ route('tindaklanjut.show', $tl->id_tl) }}" class="mx-2">
-                                                    <i class="fas fa-info-circle text-blue-500 h-6 w-6 fa-2x"></i>
-                                                </a>
-                                                <!-- Icon Hapus -->
-                                                <form method="POST" action="{{ route('tindaklanjut.destroy', $tl->id_tl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="mx-2">
-                                                        <i class="fas fa-trash-alt text-red-500 h-6 w-6 fa-2x"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                            <tbody>
+    @php
+        $dataSedang = $tindaklanjut->filter(fn($item) => $item->status === 'sedang diproses' || $item->status === 'disetujui_asisten'|| $item->status === 'ditolak_asisten' );
+        $dataLainnya = $tindaklanjut->filter(fn($item) => !in_array($item->status, ['sedang diproses', 'disetujui_asisten','ditolak_asisten']));
+    @endphp
+
+    <!-- Data dengan status 'sedang' dan 'approved_asisten' -->
+    @foreach($dataSedang->sortByDesc(fn($item) => $item->status === 'disetujui_asisten' ? 1 : 0)->values() as $k)
+        <tr class="bg-white">
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p>{{ $k->nama_pelapor }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->tanggal }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->lokasi }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->personel }}</p>
+            </td><td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->sumber }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->status ?? 'Belum Disetujui' }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <div class="flex justify-center space-x-2">
+                    <!-- Icon Detail -->
+                    <a href="{{ route('tindaklanjut.show', $k->id_tl) }}" class="mx-2">
+                        <i class="fas fa-info-circle text-blue-500 h-6 w-6 fa-2x"></i>
+                    </a>
+                    <!-- Icon Hapus -->
+                    <form method="POST" action="{{ route('tindaklanjut.destroy', $k->id_tl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="mx-2">
+                            <i class="fas fa-trash-alt text-red-500 h-6 w-6 fa-2x"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+
+    <!-- Data lainnya -->
+    @foreach($dataLainnya as $k)
+        <tr class="bg-gray-200">
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p>{{ $k->nama_pelapor }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->tanggal }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->lokasi }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->personel }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->sumber }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <p class="text-gray-900 whitespace-no-wrap">{{ $k->status ?? 'Belum Disetujui' }}</p>
+            </td>
+            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                <div class="flex justify-center space-x-2">
+                    <!-- Icon Detail -->
+                    <a href="{{ route('tindaklanjut.show', $k->id_tl) }}" class="mx-2">
+                        <i class="fas fa-info-circle text-blue-500 h-6 w-6 fa-2x"></i>
+                    </a>
+                    <!-- Icon Hapus -->
+                    <form method="POST" action="{{ route('tindaklanjut.destroy', $k->id_tl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="mx-2">
+                            <i class="fas fa-trash-alt text-red-500 h-6 w-6 fa-2x"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
                         </table>
                     </div>
-<!-- PAGE -->
 
+                    <!-- Pagination -->
                     <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                         <div class="flex flex-1 justify-between sm:hidden">
                             @if ($tindaklanjut->onFirstPage())
-                            <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Previous</span>
+                                <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Previous</span>
                             @else
-                            <a href="{{ $tindaklanjut->previousPageUrl() }}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+                                <a href="{{ $tindaklanjut->previousPageUrl() }}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
                             @endif
 
                             @if ($tindaklanjut->hasMorePages())
-                            <a href="{{ $tindaklanjut->nextPageUrl() }}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+                                <a href="{{ $tindaklanjut->nextPageUrl() }}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
                             @else
-                            <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Next</span>
+                                <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Next</span>
                             @endif
                         </div>
 
                         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                             <div>
-                            <p class="text-sm text-gray-700">
-                                Showing
-                                <span class="font-medium">{{ $tindaklanjut->firstItem() }}</span>
-                                to
-                                <span class="font-medium">{{ $tindaklanjut->lastItem() }}</span>
-                                of
-                                <span class="font-medium">{{ $tindaklanjut->total() }}</span>
-                                results
-                            </p>
+                                <p class="text-sm text-gray-700">
+                                    Showing
+                                    <span class="font-medium">{{ $tindaklanjut->firstItem() }}</span>
+                                    to
+                                    <span class="font-medium">{{ $tindaklanjut->lastItem() }}</span>
+                                    of
+                                    <span class="font-medium">{{ $tindaklanjut->total() }}</span>
+                                    results
+                                </p>
                             </div>
                             <div>
-                            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                                @if ($tindaklanjut->onFirstPage())
-                                <span class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                    <span class="sr-only">Previous</span>
-                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                @else
-                                <a href="{{ $tindaklanjut->previousPageUrl() }}" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <span class="sr-only">Previous</span>
-                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                                @endif
-
-                                @foreach ($tindaklanjut->links()->elements as $element)
-                                @if (is_string($element))
-                                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300">{{ $element }}</span>
-                                @elseif (is_array($element))
-                                    @foreach ($element as $page => $url)
-                                    @if ($page == $tindaklanjut->currentPage())
-                                        <span class="relative inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300">{{ $page }}</span>
+                                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                                    @if ($tindaklanjut->onFirstPage())
+                                        <span class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
+                                            <span class="sr-only">Previous</span>
+                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                            </svg>
+                                        </span>
                                     @else
-                                        <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">{{ $page }}</a>
+                                        <a href="{{ $tindaklanjut->previousPageUrl() }}" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                            <span class="sr-only">Previous</span>
+                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
                                     @endif
-                                    @endforeach
-                                @endif
-                                @endforeach
 
-                                @if ($tindaklanjut->hasMorePages())
-                                <a href="{{ $tindaklanjut->nextPageUrl() }}" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <span class="sr-only">Next</span>
-                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                                @else
-                                <span class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                    <span class="sr-only">Next</span>
-                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                @endif
-                            </nav>
+                                    @foreach ($tindaklanjut->links()->elements as $element)
+                                        @if (is_string($element))
+                                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300">{{ $element }}</span>
+                                        @elseif (is_array($element))
+                                            @foreach ($element as $page => $url)
+                                                @if ($page == $tindaklanjut->currentPage())
+                                                    <span class="relative inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300">{{ $page }}</span>
+                                                @else
+                                                    <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">{{ $page }}</a>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+
+                                    @if ($tindaklanjut->hasMorePages())
+                                        <a href="{{ $tindaklanjut->nextPageUrl() }}" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                            <span class="sr-only">Next</span>
+                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
+                                    @else
+                                        <span class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
+                                            <span class="sr-only">Next</span>
+                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                            </svg>
+                                        </span>
+                                    @endif
+                                </nav>
                             </div>
                         </div>
-                        </div>
+                    </div>
 
-                                        </div>
-                                    </div>
-                                </div>
-    </div></x-app-layout>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

@@ -10,8 +10,11 @@
                 </h2>
             </div>
             <div class="flex justify-center">
-                <div class="w-full max-w-4xl px-4 sm:px-8 py-4 overflow-x-auto">
-                    <div class="my-2 flex flex-row-reverse mt-20">
+            <div class="w-full max-w-4xl px-4 sm:px-8 py-4 overflow-x-auto">
+                    <div class="my-2 flex justify-between mt-20">
+                        <a href="{{ route('kerusakan.insert') }}" class="bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-200 flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Tambah Data Kerusakan
+                        </a>
                         <div class="relative w-50 flex items-center">
                             <form method="GET" action="{{ route('kerusakan.index') }}" class="flex items-center">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -21,11 +24,8 @@
                                 </span>
                                 <input name="search" placeholder="Cari data" class="appearance-none rounded-full border-2 border-black block pl-10 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-black focus:bg-white focus:placeholder-primary focus:text-gray-700 focus:outline-none" value="{{ Request::get('search') }}" />
                             </form>
-                            <a href="#" class="ml-4 bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-200">
-                                Insert
-                            </a>
                         </div>
-                    </div>
+                    </div>    
                     <div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
                         <table class="min-w-full leading-normal">
                             <thead>
@@ -65,11 +65,11 @@
                                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                             <div class="flex justify-center space-x-2">
                                                 <!-- Icon Detail -->
-                                                <a href="{{ route('kerusakan.show', $k->id_kerusakan) }}" class="mx-2">
+                                                <a href="{{ route('kerusakan.pekerja.show', $k->id_kerusakan) }}" class="mx-2">
                                                     <i class="fas fa-info-circle text-blue-500 h-6 w-6 fa-2x"></i>
                                                 </a>
                                                 <!-- Icon Hapus -->
-                                                <form method="POST" action="{{ route('kerusakan.destroy', $k->id_kerusakan) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                <form method="POST" action="{{ route('kerusakan.pekerja.destroy', $k->id_kerusakan) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="mx-2">

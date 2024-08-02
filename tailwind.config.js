@@ -18,6 +18,7 @@ export default {
                 primary: '#2D2A6C',
                 secondary: '#EC6A28',
                 ketiga: '#CFDFEE',
+                keempat : '#FFF0E2',
                 abu : '#C1C1C1',
             },
             width:{

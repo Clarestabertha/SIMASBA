@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('deskripsi',100);
             $table->string('personel');
             $table->string('sumber');
-            $table->string('foto')->nullable();
-            $table->string('status')->nullable();
+            $table->string('foto',500);
+            $table->string('status')->default('sedang diproses');
             $table->timestamps();
         });
     }

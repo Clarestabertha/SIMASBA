@@ -13,7 +13,7 @@ class Kerusakan extends Model
     protected $table = 'kerusakan';
 
     // Jika tabel tidak menggunakan timestamp
-    public $timestamps = false;
+    public $timestamps = true;
     protected $primaryKey = 'id_kerusakan';
 
     // Kolom yang dapat diisi secara massal
@@ -28,4 +28,8 @@ class Kerusakan extends Model
         'foto_kerusakan',
         'status',
     ];
+    protected $attributes = [
+        'status' => 'sedang diproses',
+    ];
+    
 }
