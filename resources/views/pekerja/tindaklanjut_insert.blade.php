@@ -15,11 +15,11 @@
         @csrf
                 <div class="mb-4">
                     <label for="tanggal" class="block text-black mb-2">Tanggal Laporan</label>
-                    <input type="date" id="tanggal" name="tanggal" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                    <input type="date" id="tanggal" name="tanggal" class="w-full border-2 border-gray-300 p-2 rounded-full" value="{{ $kerusakan->tanggal }}" required>
                 </div>
                 <div class="mb-4">
                     <label for="lokasi" class="block text-black mb-2">Lokasi Perbaikan</label>
-                    <input type="text" id="lokasi" name="lokasi" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                    <input type="text" id="lokasi" name="lokasi" class="w-full border-2 border-gray-300 p-2 rounded-full" value="{{ $kerusakan->lokasi }}" required>
                 </div>
                 <div class="mb-4">
                     <label class="block text-black mb-2">Ditujukkan Kepada</label>
@@ -48,11 +48,11 @@
                 </div>
                 <div class="mb-4">
                     <label for="personel" class="block text-black mb-2">Personel</label>
-                    <input type="text" id="personel" name="personel" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                    <input type="text" id="personel" name="personel" class="w-full border-2 border-gray-300 p-2 rounded-full" value="{{ $kerusakan->personel }}" required>
                 </div>
                 <div class="mb-4">
                     <label for="sumber" class="block text-black mb-2">Sumber Pelaporan dan Kerusakan</label>
-                    <input type="text" id="sumber" name="sumber" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                    <input type="text" id="sumber" name="sumber" class="w-full border-2 border-gray-300 p-2 rounded-full" value="{{ $kerusakan->sumber_laporan }}" required>
                 </div>
                 <div class="mb-4">
                     <label for="foto" class="block text-black mb-2">Foto Tindak Lanjut</label>

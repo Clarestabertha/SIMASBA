@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\Kerusakan;
 use App\Models\Tindaklanjut;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +18,7 @@ class PekerjaTindakLanjutController extends Controller
 
         // Query dengan kondisi pencarian
         $tindaklanjut = Tindaklanjut::query()
+            ->where('user_id', $user->id)
             ->where(function($query) use ($search) {
                 $query->where('nama_pelapor', 'LIKE', "%{$search}%")
                       ->orWhere('tanggal', 'LIKE', "%{$search}%")
@@ -29,12 +31,12 @@ class PekerjaTindakLanjutController extends Controller
 
         return view('pekerja.tindaklanjut', compact('tindaklanjut'));
     }
-    public function insert(): View
+    public function insert($id_kerusakan): View
     {
-        return view('pekerja.tindaklanjut_insert');
+        $kerusakan = Kerusakan::findOrFail($id_kerusakan);
+        return view('pekerja.tindaklanjut_insert', compact('kerusakan'));
     }
-    public function store(Request $request)
-{
+    public function store(Request $request){
     $request->validate([
         'tanggal' => 'required|date',
         'lokasi' => 'required|string',
@@ -43,7 +45,7 @@ class PekerjaTindakLanjutController extends Controller
         'personel' => 'required|string',
         'sumber' => 'required|string',
         'foto' => 'required|array|max:5',
-        'foto.*' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+        'foto.*' => 'required|image|mimes:jpg,jpeg,png|max:10240',
     ]);
 
     $fotos = [];
@@ -59,7 +61,9 @@ class PekerjaTindakLanjutController extends Controller
     $untuk = implode(',', $request->untuk);
 
     $tindaklanjut = new Tindaklanjut([
+        'id_kerusakan' => $request->id_kerusakan,
         'status' => 'sedang diproses',
+        'user_id'=> Auth::user()->id,
         'nama_pelapor' => Auth::user()->name,
         'tanggal' => $request->tanggal,
         'lokasi' => $request->lokasi,

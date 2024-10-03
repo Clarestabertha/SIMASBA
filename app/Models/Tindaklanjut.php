@@ -18,6 +18,7 @@ class Tindaklanjut extends Model
 
     // Kolom yang dapat diisi secara massal
     protected $fillable = [
+        'user_id',
         'nama_pelapor',
         'tanggal',
         'lokasi',
@@ -31,4 +32,8 @@ class Tindaklanjut extends Model
     protected $attributes = [
         'status' => 'sedang diproses',
     ];
+    public function kerusakan()
+    {
+        return $this->belongsTo(Kerusakan::class, 'id_kerusakan');
+    }
 }

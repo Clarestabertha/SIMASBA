@@ -37,7 +37,20 @@
             <div class="actions space-y-2">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="inline-block px-6 py-2 bg-secondary text-white rounded-full transition duration-300 hover:bg-red-700">
+                        @php
+                            $role = Auth::user()->role;
+                            $dashboardRoute = '';
+
+                            if ($role === 'pekerja_lapangan') {
+                                $dashboardRoute = route('homepage.pekerja');
+                            } elseif ($role === 'asisten_manajer') {
+                                $dashboardRoute = route('homepage.asisten_manajer');
+                            } elseif ($role === 'manajer') {
+                                $dashboardRoute = route('dashboard');
+                            }
+                        @endphp
+
+                        <a href="{{ $dashboardRoute }}" class="inline-block px-6 py-2 bg-secondary text-white rounded-full transition duration-300 hover:bg-red-700">
                             Dashboard
                         </a>
                     @else

@@ -70,10 +70,12 @@ Route::delete('/kerusakan-pekerja/{id_kerusakan}', [PekerjaKerusakanController::
 Route::get('/tindaklanjut', [PekerjaTindakLanjutController::class, 'index'])->name('tindaklanjut.pekerja');
 Route::get('/search_tindaklanjut', [PekerjaTindakLanjutController::class, 'index'])->name('tindaklanjut.index');
 Route::get('/input_tindaklanjut', [PekerjaTindakLanjutController::class, 'insert'])->name('tindaklanjut.insert');
+Route::get('/input_tindaklanjut/{id_kerusakan}', [PekerjaTindakLanjutController::class, 'insert'])->name('tindaklanjut.input');
 Route::post('/tindaklanjut/store', [PekerjaTindakLanjutController::class, 'store'])->name('tindaklanjut.store');
 Route::get('/tindaklanjut-pekerja/show/{id_tl}', [PekerjaTindakLanjutController::class, 'show'])->name('tindaklanjut.pekerja.show');
 Route::delete('/tindaklanjut-pekerja/{id_tl}', [PekerjaTindakLanjutController::class, 'destroy'])->name('tindaklanjut.pekerja.destroy');
 Route::get('/panduan', [PekerjaController::class, 'panduan'])->name('panduan');
+Route::post('/update-selesai', [PekerjaController::class, 'updateSelesai'])->name('update.selesai');
 
 
 Route::get('/homepage/asisten-manajer', [AsistenManajerController::class, 'index'])->name('homepage.asisten_manajer');

@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
 
     if (!$user || $user->persetujuan !== 'approved') {
         // Jika pengguna belum disetujui, tampilkan pesan
-        return redirect()->route('welcome')->with('status', 'Your registration is pending approval.');
+        return redirect()->route('welcome')->with('status', 'Permintaan Registrasimu sedang di Proses');
     }
 
     if (Auth::attempt($credentials)) {
@@ -52,7 +52,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     return redirect()->back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
+        'password' => 'Password yang anda masukkan salah.',
     ]);
 }
 

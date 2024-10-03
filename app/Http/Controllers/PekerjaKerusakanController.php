@@ -15,7 +15,7 @@ class PekerjaKerusakanController extends Controller
         $user = Auth::user();
 
         $kerusakan = Kerusakan::query()
-            ->where('nama_pelapor', $user->name)
+            ->where('user_id', $user->id)
             ->where(function($query) use ($search) {
                 $query->Where('tanggal', 'LIKE', "%{$search}%")
                       ->orWhere('sumber_laporan', 'LIKE', "%{$search}%")
@@ -40,7 +40,7 @@ class PekerjaKerusakanController extends Controller
             'lokasi' => 'required|string',
             'deskripsi' => 'required|string',
             'foto_kerusakan' => 'required|array|max:5',
-            'foto_kerusakan.*' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+            'foto_kerusakan.*' => 'required|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $fotos = [];
@@ -53,6 +53,7 @@ class PekerjaKerusakanController extends Controller
         }
 
         $kerusakan = new Kerusakan([
+            'user_id' => Auth::user()->id,
             'nama_pelapor' => Auth::user()->name,
             'tanggal' => $request->tanggal,
             'sumber_laporan' => $request->sumber_laporan,

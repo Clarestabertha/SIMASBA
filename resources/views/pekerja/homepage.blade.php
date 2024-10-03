@@ -1,4 +1,5 @@
 <x-app-layout>
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Gambar mengapung ke kanan -->
     <div class="relative mt-8">
         <img src="{{ asset('/storage/img/home-pekerja.png') }}" alt="Konten Pekerja" class="w-2/3 ml-4 mb-8 mt-8 float-right">
@@ -95,7 +96,7 @@
                 </thead>
                 <tbody id="tindaklanjut-table">
                     @foreach($kerusakan as $item)
-                    <tr id="row-{{ $item->id_tl }}">
+                    <tr id="row-{{ $item->id_kerusakan }}">
                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->tanggal }}</p>
                         </td>
@@ -106,8 +107,12 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->personel }}</p>
                         </td>
                         <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                            <input type="checkbox" class="completed-checkbox" data-id="{{ $item->id_tl }}">
+                            <a href="{{ route('tindaklanjut.input', ['id_kerusakan' => $item->id_kerusakan]) }}">
+                                <input type="checkbox" class="completed-checkbox" data-id="{{ $item->id_kerusakan }}">
+                            </a>
                         </td>
+
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -156,14 +161,40 @@
     </div>
 
     <script>
-        document.querySelectorAll('.completed-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    this.closest('tr').style.display = 'none';
+    document.querySelectorAll('.completed-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        let row = this.closest('tr');
+        if (this.checked) {
+            let id = this.getAttribute('data-id');
+            fetch("{{ route('update.selesai') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ id_kerusakan: id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect ke halaman insert tindak lanjut setelah berhasil
+                    window.location.href = "{{ url('input_tindaklanjut') }}/" + id; // Ganti URL sesuai dengan route yang Anda gunakan
                 } else {
-                    this.closest('tr').style.display = '';
+                    alert('Failed to update status');
+                    this.checked = false;
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update status');
+                this.checked = false;
             });
-        });
-    </script>
+        } else {
+            row.style.display = '';
+        }
+    });
+});
+
+</script>
+
 </x-app-layout>
