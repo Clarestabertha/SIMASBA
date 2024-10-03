@@ -30,6 +30,10 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('l
 
 Route::get('/permintaanregis', [UserController::class, 'index'])->name('permintaan_regis');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::get('/tambah_akun', [UserController::class, 'create'])->name('user.insert');
+Route::get('/tambah_akun/store', [UserController::class, 'store'])->name('user.store');
+
+
 
 Route::post('/user/approve/{user}', [UserController::class, 'approve'])->name('user.approve');
 Route::post('/user/reject/{user}', [UserController::class, 'reject'])->name('user.reject');

@@ -66,4 +66,34 @@ class UserController extends Controller
         return response()->json(['status' => 'rejected']);
     }
 
+ public function create()
+{
+    // Menampilkan halaman form untuk membuat akun baru
+    return view('manajer.tambahakun'); // Sesuaikan dengan nama view Anda
+}
+
+public function store(Request $request)
+{
+    // Validasi input
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+        'role' => 'required|string|in:asisten_manajer,pekerja_lapangan', // Sesuaikan dengan role yang ada
+    ]);
+
+    // Membuat akun baru
+    $user = User::create([
+        'name' => $validatedData['name'],
+        'email' => $validatedData['email'],
+        'password' => bcrypt($validatedData['password']), // Enkripsi password
+        'role' => $validatedData['role'],
+        'persetujuan' => null, // Status persetujuan awal
+    ]);
+
+    return redirect()->route('manajer.permintaan_regis') // Ubah sesuai dengan rute Anda
+                     ->with('success', 'Akun berhasil dibuat.');
+}
+   
+
 }

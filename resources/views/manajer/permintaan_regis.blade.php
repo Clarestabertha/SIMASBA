@@ -33,18 +33,21 @@
             
             <div class="flex justify-center">
                 <div class="w-full max-w-4xl px-4 sm:px-8 py-4 overflow-x-auto">
-                    <div class="my-2 flex flex-row-reverse mt-20">
-                        <div class="relative w-50">
-                            <form method="GET" action="{{ route('user.index') }}">
+                <div class="my-2 flex justify-between mt-20">
+                        <a href="{{ route('user.insert') }}" class="bg-primary text-white px-4 py-2 rounded-full hover:bg-secondary transition duration-200 flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Tambah Akun
+                        </a>
+                        <div class="relative w-50 flex items-center">
+                            <form method="GET" action="{{ route('user.index') }}" class="flex items-center">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                     <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current text-black ml-1">
                                         <path d="M10 2a8 8 0 015.293 13.707L22 21.414 20.586 23l-6.707-6.707A8 8 0 1110 2zm0 2a6 6 0 100 12A6 6 0 0010 4z"></path>
                                     </svg>
                                 </span>
-                                <input name="search" placeholder="Cari nama atau email" class="appearance-none rounded-full border-2 border-black block pl-10 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-black focus:bg-white focus:placeholder-primary focus:text-gray-700 focus:outline-none" value="{{ Request::get('search') }}"/>
+                                <input name="search" placeholder="Cari Nama atau Email" class="appearance-none rounded-full border-2 border-black block pl-10 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-black focus:bg-white focus:placeholder-primary focus:text-gray-700 focus:outline-none" value="{{ Request::get('search') }}" />
                             </form>
                         </div>
-                    </div>
+</div>
 
                     <div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
                         <table class="min-w-full leading-normal">
