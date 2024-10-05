@@ -28,10 +28,11 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
 
-Route::get('/permintaanregis', [UserController::class, 'index'])->name('permintaan_regis');
+Route::get('/akun', [UserController::class, 'index'])->name('permintaan_active');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/tambah_akun', [UserController::class, 'create'])->name('user.insert');
 Route::get('/tambah_akun/store', [UserController::class, 'store'])->name('user.store');
+Route::post('/profile/deactivate', [ProfileController::class, 'deactivate'])->name('profile.deactivate');
 
 
 

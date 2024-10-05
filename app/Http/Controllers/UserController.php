@@ -26,7 +26,7 @@ class UserController extends Controller
         ->paginate(10);
 
     if ($request->ajax()) {
-        $permintaanregis = User::whereNull('persetujuan')->count();
+        $permintaanactive = User::whereNull('persetujuan')->count();
         $asmen = User::where('role', 'asisten_manajer')
                      ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
                      ->count();
@@ -36,33 +36,33 @@ class UserController extends Controller
 
         return response()->json([
             'users' => $users,
-            'permintaanregis' => $permintaanregis,
+            'permintaanactive' => $permintaanactive,
             'asmen' => $asmen,
             'pekerjalapangan' => $pekerjalapangan,
         ]);
     }
 
-    $permintaanregis = User::whereNull('persetujuan')->count();
+    $permintaanactive = User::where('persetujuan', 'deactivated')->count();
     $asmen = User::where('role', 'asisten_manajer')
-                 ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                 ->whereNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
                  ->count();
     $pekerjalapangan = User::where('role', 'pekerja_lapangan')
-                          ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                          ->whereNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
                           ->count();
 
-    return view('manajer.permintaan_regis', compact('users', 'permintaanregis', 'asmen', 'pekerjalapangan'));
+    return view('manajer.permintaan_active', compact('users', 'permintaanactive', 'asmen', 'pekerjalapangan'));
 }
 
 
     public function approve(User $user)
     {
-        $user->update(['persetujuan' => 'approved']);
+        $user->update(['persetujuan' => 'deactivated']);
         return response()->json(['status' => 'approved']);
     }
 
     public function reject(User $user)
     {
-        $user->update(['persetujuan' => 'rejected']);
+        $user->update(['persetujuan' => null]);
         return response()->json(['status' => 'rejected']);
     }
 
@@ -91,7 +91,7 @@ public function store(Request $request)
         'persetujuan' => null, // Status persetujuan awal
     ]);
 
-    return redirect()->route('manajer.permintaan_regis') // Ubah sesuai dengan rute Anda
+    return redirect()->route('manajer.permintaan_active') // Ubah sesuai dengan rute Anda
                      ->with('success', 'Akun berhasil dibuat.');
 }
    

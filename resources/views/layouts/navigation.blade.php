@@ -25,8 +25,8 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Beranda') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
-                            {{ __('Permintaan Registrasi') }}
+                        <x-nav-link :href="route('permintaan_active')" :active="request()->routeIs('permintaan_active')">
+                            {{ __('Akun') }}
                         </x-nav-link>
                         <x-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
                             {{ __('Kerusakan') }}
@@ -116,8 +116,8 @@
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Beranda') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('permintaan_regis')" :active="request()->routeIs('permintaan_regis')">
-                    {{ __('Permintaan Registrasi') }}
+                <x-responsive-nav-link :href="route('permintaan_active')" :active="request()->routeIs('permintaan_active')">
+                    {{ __('Akun') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('kerusakan')" :active="request()->routeIs('kerusakan')">
                     {{ __('Kerusakan') }}

@@ -6,15 +6,15 @@
         <div class="py-8">
             <div>
                 <h2 class="text-5xl font-bold leading-tight text-center gradient-text">
-                    Permintaan Registrasi Akun
+                    Akun Yang Terdaftar
                 </h2>
             </div>
             
             <div class="mt-16 flex space-x-14 items-center justify-center">
                 <div class="w-60 h-24 gradient-card-1 shadow-lg rounded-3xl overflow-hidden flex items-center justify-center">
                     <div class="flex flex-col items-center text-center text-white p-4">
-                        <h3 class="text-4xl font-semibold mb-2">{{$permintaanregis}}</h3>
-                        <p>Permintaan Registrasi</p>
+                        <h3 class="text-4xl font-semibold mb-2">{{$permintaanactive}}</h3>
+                        <p>Akun Non Aktif</p>
                     </div>      
                 </div>
                 <div class="w-60 h-24 gradient-card-2 shadow-lg rounded-3xl overflow-hidden flex items-center justify-center">
@@ -66,47 +66,68 @@
                                         Role
                                     </th>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
-                                        Disetujui
+                                        Status Akun
                                     </th>
                                 </tr>
                             </thead>
                             <tbody id="user-table-body">
                             @foreach($users as $user)
-                            <tr class="{{ $user->persetujuan === 'approved' ? 'bg-abu' : ($user->persetujuan === 'rejected' ? 'bg-abu' : 'bg-white') }}">
-                                <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                    <p>{{ $user->name }}</p>
-                                </td>
-                                <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->email }}</p>
-                                </td>
-                                <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->created_at }}</p>
-                                </td>
-                                <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->role }}</p>
-                                </td>
-                                <td class="px-5 py-5 border border-gray-200 text-sm text-center">
-                                    @if($user->persetujuan === 'approved')
-                                        <span class="text-green-500">Disetujui</span>
-                                    @elseif($user->persetujuan === 'rejected')
-                                        <span class="text-red-500">Tidak Disetujui</span>
-                                    @else
-                                        <div class="flex justify-center space-x-2">
-                                            <button onclick="updateStatus('{{ route('user.approve', $user->id) }}', this)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                            <button onclick="updateStatus('{{ route('user.reject', $user->id) }}', this)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </div>
+                                    @if ($user->persetujuan !== 'deactivated')
+                                        <tr class="{{ $user->persetujuan === 'rejected' ? 'bg-abu' : 'bg-white' }}">
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p>{{ $user->name }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->email }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->created_at }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->role }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                @if($user->persetujuan === NULL)
+                                                <span class="text-green-500">Aktif</span>
+                                                @else
+                                                    <div class="flex justify-center space-x-2">
+                                                        <button onclick="updateStatus('{{ route('user.approve', $user->id) }}', this)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </button>
+                                                        <button onclick="updateStatus('{{ route('user.reject', $user->id) }}', this)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                        </tr>
                                     @endif
-                                </td>
-                            </tr>
-                            @endforeach
+                                @endforeach
+                                @foreach($users as $user)
+                                    @if ($user->persetujuan === 'deactivated')
+                                        <tr class="bg-abu">
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p>{{ $user->name }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->email }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->created_at }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $user->role }}</p>
+                                            </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                            <span class="text-red-500">Non Aktif</span>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -210,14 +231,12 @@
             const statusCell = row.querySelector('td:last-child');
 
             // Update the status cell based on the response
-            if (data.status === 'approved') {
+            if (data.status === 'deactivated') {
                 row.classList.add('bg-abu');
                 row.classList.remove('bg-white');
-                statusCell.innerHTML = '<span class="text-green-500">Disetujui</span>';
+                statusCell.innerHTML = '<span class="text-red-500">Non Aktif</span>';
             } else if (data.status === 'rejected') {
-                row.classList.add('bg-abu');
-                row.classList.remove('bg-white');
-                statusCell.innerHTML = '<span class="text-red-500">Tidak Disetujui</span>';
+                statusCell.innerHTML = '<span class="text-green-500">Aktif</span>';
             }
         })
         .catch(error => console.error('Error:', error));

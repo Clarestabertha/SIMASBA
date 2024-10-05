@@ -32,13 +32,21 @@ class AuthenticatedSessionController extends Controller
         $credentials = $request->only('email', 'password');
         $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-        // Menghapus pemeriksaan persetujuan
+        // Cek apakah pengguna ada
         if (!$user) {
             return redirect()->back()->withErrors([
                 'email' => 'Email yang anda masukkan tidak terdaftar.',
             ]);
         }
 
+        // Cek apakah pengguna sudah disetujui
+        if ($user->persetujuan !== null) {
+            return redirect()->back()->withErrors([
+                'email' => 'Akun Anda tidak dapat mengakses sistem.',
+            ]);
+        }
+
+        // Cek kredensial untuk login
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
@@ -57,7 +65,6 @@ class AuthenticatedSessionController extends Controller
             'password' => 'Password yang anda masukkan salah.',
         ]);
     }
-
     /**
      * Destroy an authenticated session.
      */
