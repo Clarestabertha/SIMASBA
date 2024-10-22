@@ -22,8 +22,20 @@
                             <input type="text" id="sumber_laporan" name="sumber_laporan" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
                         </div>
                         <div class="mb-4">
-                            <label for="lokasi" class="block text-black mb-2">Lokasi Kerusakan</label>
-                            <input type="text" id="lokasi" name="lokasi" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                        <label for="lokasi" class="block text-black mb-2">Lokasi Kerusakan</label>
+                            <select id="lokasi" name="lokasi" class="w-full border-2 border-gray-300 p-2 rounded-full" required>
+                                <option value="">Pilih Lokasi</option>
+                                <option value="stasiun_purwokerto">Stasiun Purwokerto</option>
+                                <option value="stasiun_kutoarjo">Stasiun Kutoarjo</option>
+                                <option value="stasiun_kroya">Stasiun Kroya</option>
+                                <option value="stasiun_cilacap">Stasiun Cilapcap</option>
+                                <option value="stasiun_karanganyar">Stasiun Karanganyar</option>
+                                <option value="bangdis_purwokerto">Bangunan Dinas Purwokerto</option>
+                                <option value="bangdis_kutoarjo">Bangunan Dinas Kutoarjo</option>
+                                <option value="bangdis_kroya">Bangunan Dinas Kroya</option>
+                                <option value="bangdis_cilacap">Bangunan Dinas Cilacap</option>
+                                <option value="bangdis_karanganyar">Bangunan Dinas Karanganyar</option>
+                            </select>
                         </div>
                         <div class="mb-4">
                             <label for="deskripsi" class="block text-black mb-2">Deskripsi Kerusakan</label>
@@ -31,7 +43,7 @@
                         </div>
                         <div class="mb-4">
                             <label for="foto_kerusakan" class="block text-black mb-2">Foto Kerusakan (maksimal 5 foto)</label>
-                            <input type="file" id="foto_kerusakan" name="foto_kerusakan[]" class="w-full border-2 border-gray-300 p-2 rounded-full" multiple required>
+                            <input type="file" id="foto_kerusakan" name="foto_kerusakan[]" multiple required>
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-primary transition duration-200">Kirim</button>

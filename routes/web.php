@@ -27,12 +27,16 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+Route::post('/user/check-email', [UserController::class, 'checkEmail'])->name('user.checkEmail');
 
 Route::get('/akun', [UserController::class, 'index'])->name('permintaan_active');
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/tambah_akun', [UserController::class, 'create'])->name('user.insert');
-Route::get('/tambah_akun/store', [UserController::class, 'store'])->name('user.store');
+Route::post('/tambah_akun/store', [UserController::class, 'store'])->name('user.store');
 Route::post('/profile/deactivate', [ProfileController::class, 'deactivate'])->name('profile.deactivate');
+Route::post('/profile/deactivate/{id}', [ProfileController::class, 'deactivate'])->name('user.deactivate');
+Route::post('/profile/active/{id}', [ProfileController::class, 'active'])->name('user.active');
+Route::get('/permintaan-active', [UserController::class, 'index'])->name('manajer.permintaan_active');
 
 
 
@@ -40,7 +44,7 @@ Route::post('/user/approve/{user}', [UserController::class, 'approve'])->name('u
 Route::post('/user/reject/{user}', [UserController::class, 'reject'])->name('user.reject');
 
 Route::get('/kerusakan_manajer', [KerusakanController::class, 'index'])->name('kerusakan');
-Route::get('/search_kerusakan', [KerusakanController::class, 'index'])->name('kerusakan.index');
+Route::get('/search_kerusakan_manajer', [KerusakanController::class, 'index'])->name('kerusakan.indexmanajer');
 Route::get('/kerusakan/{id_kerusakan}', [KerusakanController::class, 'show'])->name('kerusakan.show');
 Route::delete('/kerusakan/{id_kerusakan}', [KerusakanController::class, 'destroy'])->name('kerusakan.destroy');
 // Route untuk persetujuan oleh asisten manajer
@@ -53,7 +57,7 @@ Route::put('/kerusakan/{id_kerusakan}/reject-manajer', [KerusakanController::cla
 
 
 Route::get('/tindak_lanjut_manajer', [TindaklanjutController::class, 'index'])->name('tindaklanjut');
-Route::get('/search_tl', [TindaklanjutController::class, 'index'])->name('tindaklanjut.index');
+Route::get('/search_tl_manajer', [TindaklanjutController::class, 'index'])->name('tindaklanjut.indexmanajer');
 Route::get('/tindaklanjut/{id_tl}', [TindaklanjutController::class, 'show'])->name('tindaklanjut.show');
 Route::delete('/tindaklanjut/{id_tl}', [TindaklanjutController::class, 'destroy'])->name('tindaklanjut.destroy');
 
@@ -67,13 +71,13 @@ Route::put('/tindaklanjut/{id_tl}/reject-manajer', [TindaklanjutController::clas
 
 Route::get('/homepage/pekerja', [PekerjaController::class, 'index'])->name('homepage.pekerja');
 Route::get('/kerusakan-pekerja', [PekerjaKerusakanController::class, 'index'])->name('kerusakan.pekerja');
-Route::get('/search_kerusakan', [PekerjaKerusakanController::class, 'index'])->name('kerusakan.index');
+Route::get('/search_kerusakan_pekerja', [PekerjaKerusakanController::class, 'index'])->name('kerusakan.indexpekerja');
 Route::get('/input_kerusakan', [PekerjaKerusakanController::class, 'insert'])->name('kerusakan.insert');
 Route::post('/kerusakan/store', [PekerjaKerusakanController::class, 'store'])->name('kerusakan.store');
 Route::get('/kerusakan-pekerja/show/{id_kerusakan}', [PekerjaKerusakanController::class, 'show'])->name('kerusakan.pekerja.show');
 Route::delete('/kerusakan-pekerja/{id_kerusakan}', [PekerjaKerusakanController::class, 'destroy'])->name('kerusakan.pekerja.destroy');
 Route::get('/tindaklanjut', [PekerjaTindakLanjutController::class, 'index'])->name('tindaklanjut.pekerja');
-Route::get('/search_tindaklanjut', [PekerjaTindakLanjutController::class, 'index'])->name('tindaklanjut.index');
+Route::get('/search_tindaklanjut_pekerja', [PekerjaTindakLanjutController::class, 'index'])->name('tindaklanjut.indexpekerja');
 Route::get('/input_tindaklanjut', [PekerjaTindakLanjutController::class, 'insert'])->name('tindaklanjut.insert');
 Route::get('/input_tindaklanjut/{id_kerusakan}', [PekerjaTindakLanjutController::class, 'insert'])->name('tindaklanjut.input');
 Route::post('/tindaklanjut/store', [PekerjaTindakLanjutController::class, 'store'])->name('tindaklanjut.store');
@@ -85,11 +89,10 @@ Route::post('/update-selesai', [PekerjaController::class, 'updateSelesai'])->nam
 
 Route::get('/homepage/asisten-manajer', [AsistenManajerController::class, 'index'])->name('homepage.asisten_manajer');
 Route::get('/kerusakan_asmen', [AsmenKerusakanController::class, 'index'])->name('kerusakan.asisten_manajer');
-Route::get('/search_kerusakan', [AsmenKerusakanController::class, 'index'])->name('kerusakan.index');
+Route::get('/search_kerusakan_asmen', [AsmenKerusakanController::class, 'index'])->name('kerusakan.indexasisten');
 Route::get('/kerusakan-asmen/{id_kerusakan}', [AsmenKerusakanController::class, 'show'])->name('kerusakan.asmen.show');
 Route::get('/tindaklanjut_asmen', [AsmenTindakLanjutController::class, 'index'])->name('tindaklanjut.asisten_manajer');
-Route::get('/search_tindaklanjut', [AsmenTindakLanjutController::class, 'index'])->name('tindaklanjut.index');
+Route::get('/search_tindaklanjut_asmen', [AsmenTindakLanjutController::class, 'index'])->name('tindaklanjut.indexasisten');
 Route::get('/tindaklanjut-asmen/{id_tl}', [AsmenTindakLanjutController::class, 'show'])->name('tindaklanjut.asmen.show');
-
 
 require __DIR__.'/auth.php';

@@ -28,6 +28,7 @@ class Tindaklanjut extends Model
         'sumber',
         'foto',
         'status',
+        'alasan',
     ];
     protected $attributes = [
         'status' => 'sedang diproses',

@@ -28,6 +28,7 @@ class Kerusakan extends Model
         'tgl_perbaikan', // Mengganti tanda hubung dengan garis bawah
         'foto_kerusakan',
         'status',
+        'alasan',
     ];
     protected $attributes = [
         'status' => 'sedang diproses',

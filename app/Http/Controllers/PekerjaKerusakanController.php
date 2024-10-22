@@ -14,17 +14,32 @@ class PekerjaKerusakanController extends Controller
         $search = $request->input('search');
         $user = Auth::user();
 
-        $kerusakan = Kerusakan::query()
-            ->where('user_id', $user->id)
+        $disetujuiPage = $request->input('disetujui_page', 1);
+        $ditolakPage = $request->input('ditolak_page', 1);
+
+        $disetujui = Kerusakan::query()
+        ->where('user_id', $user->id)
+        ->whereIn('status', ['sedang diproses', 'disetujui', 'disetujui_asisten'])
             ->where(function($query) use ($search) {
-                $query->Where('tanggal', 'LIKE', "%{$search}%")
+                $query->where('tanggal', 'LIKE', "%{$search}%")
                       ->orWhere('sumber_laporan', 'LIKE', "%{$search}%")
                       ->orWhere('lokasi', 'LIKE', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10, ['*'], 'disetujui_page', $disetujuiPage);
 
-        return view('pekerja.kerusakan', compact('kerusakan'));
+        $ditolak = Kerusakan::query()
+        ->where('user_id', $user->id)
+        ->whereIn('status', ['ditolak', 'ditolak_asisten'])
+            ->where(function($query) use ($search) {
+                $query->where('tanggal', 'LIKE', "%{$search}%")
+                      ->orWhere('sumber_laporan', 'LIKE', "%{$search}%")
+                      ->orWhere('lokasi', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'ditolak_page', $ditolakPage);
+
+        return view('pekerja.kerusakan', compact('disetujui', 'ditolak'));
     }
 
     public function insert(): View

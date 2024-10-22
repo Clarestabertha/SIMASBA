@@ -1,12 +1,12 @@
 <x-app-layout>
-    <div class="flex items-center mt-10">
-        <img src="/storage/img/panduan.png" class="w-1/3 ml-20">
-        <div class="ml-20 p-4">
-            <p class="font-medium text-3xl">Kamu berada di halaman panduan!</p>
-            <p class="mt-5 text-lg">Halaman ini akan membantumu dalam menggunakan 
-            website SIMASBA.</p>
-        </div>
+<div class="flex items-center mt-8">
+    <img src="/storage/img/panduan.png" class="w-[500px] ml-10">
+    <div class="ml-10 p-6">
+        <p class="font-medium text-3xl">Kamu berada di halaman panduan!</p>
+        <p class="mt-4 text-lg">Halaman ini akan membantumu dalam menggunakan 
+        website SIMASBA.</p>
     </div>
+</div>
 
     <!-- Card Section -->
     <div class="py-12">

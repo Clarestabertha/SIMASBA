@@ -16,9 +16,12 @@ class PekerjaTindakLanjutController extends Controller
         $search = $request->input('search');
         $user = Auth::user();
 
-        // Query dengan kondisi pencarian
-        $tindaklanjut = Tindaklanjut::query()
-            ->where('user_id', $user->id)
+        $disetujuiPage = $request->input('disetujui_page', 1);
+        $ditolakPage = $request->input('ditolak_page', 1);
+
+        $disetujui = Tindaklanjut::query()
+        ->where('user_id', $user->id)
+            ->whereIn('status', ['sedang diproses', 'disetujui', 'disetujui_asisten'])
             ->where(function($query) use ($search) {
                 $query->where('nama_pelapor', 'LIKE', "%{$search}%")
                       ->orWhere('tanggal', 'LIKE', "%{$search}%")
@@ -27,9 +30,22 @@ class PekerjaTindakLanjutController extends Controller
                       ->orWhere('sumber', 'LIKE', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10); // Gunakan paginate() langsung setelah query builder
+            ->paginate(10, ['*'], 'disetujui_page', $disetujuiPage);
 
-        return view('pekerja.tindaklanjut', compact('tindaklanjut'));
+        $ditolak = Tindaklanjut::query()
+        ->where('user_id', $user->id)
+        ->whereIn('status', ['ditolak','ditolak_asisten'])
+            ->where(function($query) use ($search) {
+                $query->where('nama_pelapor', 'LIKE', "%{$search}%")
+                      ->orWhere('tanggal', 'LIKE', "%{$search}%")
+                      ->orWhere('lokasi', 'LIKE', "%{$search}%")
+                      ->orWhere('personel', 'LIKE', "%{$search}%")
+                      ->orWhere('sumber', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'ditolak_page', $ditolakPage);
+
+        return view('pekerja.tindaklanjut', compact('disetujui', 'ditolak'));
     }
     public function insert($id_kerusakan): View
     {

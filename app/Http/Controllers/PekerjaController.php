@@ -13,7 +13,8 @@ class PekerjaController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        $kerusakan = Kerusakan::where('selesai_perbaikan', 'belum')
+        $kerusakan = Kerusakan::where('status', 'disetujui')
+                            ->where('selesai_perbaikan', 'belum')
                             ->where('nama_pelapor', $user->name) 
                             ->get();
         return view('pekerja.homepage', compact('kerusakan'));

@@ -11,9 +11,12 @@ class TindaklanjutController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $disetujuiPage = $request->input('disetujui_page', 1);
+        $ditolakPage = $request->input('ditolak_page', 1);
 
         // Query dengan kondisi pencarian
-        $tindaklanjut = Tindaklanjut::query()
+        $disetujui = Tindaklanjut::query()
+        ->whereIn('status', ['disetujui', 'disetujui_asisten'])
             ->where(function($query) use ($search) {
                 $query->where('nama_pelapor', 'LIKE', "%{$search}%")
                       ->orWhere('tanggal', 'LIKE', "%{$search}%")
@@ -21,10 +24,30 @@ class TindaklanjutController extends Controller
                       ->orWhere('personel', 'LIKE', "%{$search}%")
                       ->orWhere('sumber', 'LIKE', "%{$search}%");
             })
+            ->orderByRaw("CASE 
+            WHEN status = 'disetujui_asisten' THEN 1
+            ELSE 2 
+          END")
             ->orderBy('created_at', 'desc')
-            ->paginate(10); // Gunakan paginate() langsung setelah query builder
+            ->paginate(10, ['*'], 'disetujui_page', $disetujuiPage);
 
-        return view('manajer.tindaklanjut', compact('tindaklanjut'));
+            $ditolak = Tindaklanjut::query()
+            ->whereIn('status', ['ditolak','ditolak_asisten'])
+            ->where(function($query) use ($search) {
+                    $query->where('nama_pelapor', 'LIKE', "%{$search}%")
+                          ->orWhere('tanggal', 'LIKE', "%{$search}%")
+                          ->orWhere('lokasi', 'LIKE', "%{$search}%")
+                          ->orWhere('personel', 'LIKE', "%{$search}%")
+                          ->orWhere('sumber', 'LIKE', "%{$search}%");
+                })
+                ->orderByRaw("CASE 
+            WHEN status = 'ditolak_asisten' THEN 1
+            ELSE 2 
+          END")
+                ->orderBy('created_at', 'desc')
+                ->paginate(10, ['*'], 'ditolak_page', $ditolakPage);
+
+                return view('manajer.tindaklanjut', compact('disetujui','ditolak'));
     }
     public function show ($id_tl){
         $tindaklanjut = Tindaklanjut::findOrFail($id_tl);
@@ -63,23 +86,25 @@ class TindaklanjutController extends Controller
         $tindaklanjut->save();
         return redirect()->route('tindaklanjut', $tindaklanjut->id_tl);    }
 }
-    public function rejectByAsisten($id_tl)
+    public function rejectByAsisten(Request $request, $id_tl)
     {
         $tindaklanjut = Tindaklanjut::findOrFail($id_tl);
 
         if ($tindaklanjut->status === 'sedang diproses') {
             $tindaklanjut->status = 'ditolak_asisten';
+            $tindaklanjut->alasan = $request->alasan;
             $tindaklanjut->save();
             return redirect()->route('tindaklanjut.asisten_manajer', $tindaklanjut->id_tl);    
         }
     }
 
-    public function rejectByManajer($id_tl)
+    public function rejectByManajer(Request $request, $id_tl)
     {
         $tindaklanjut = Tindaklanjut::findOrFail($id_tl);
 
-        if ($tindaklanjut->status === 'ditolak_asisten') {
+        if (in_array($tindaklanjut->status, ['ditolak_asisten', 'disetujui_asisten'])) {
             $tindaklanjut->status = 'ditolak';
+            $tindaklanjut->alasan = $request->alasan;
             $tindaklanjut->save();
             return redirect()->route('tindaklanjut', $tindaklanjut->id_tl);    
         }

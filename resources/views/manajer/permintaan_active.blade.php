@@ -50,7 +50,7 @@
 </div>
 
                     <div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
-                        <table class="min-w-full leading-normal">
+                        <table id="active-users-table" class="min-w-full leading-normal">
                             <thead>
                                 <tr>
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
@@ -68,11 +68,13 @@
                                     <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
                                         Status Akun
                                     </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Kelola
+                                    </th> 
                                 </tr>
                             </thead>
-                            <tbody id="user-table-body">
-                            @foreach($users as $user)
-                                    @if ($user->persetujuan !== 'deactivated')
+                            <tbody id="active-user-table-body">
+                            @foreach($activeUsers as $user)
                                         <tr class="{{ $user->persetujuan === 'rejected' ? 'bg-abu' : 'bg-white' }}">
                                             <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                                 <p>{{ $user->name }}</p>
@@ -88,15 +90,15 @@
                                             </td>
                                             <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                                 @if($user->persetujuan === NULL)
-                                                <span class="text-green-500">Aktif</span>
+                                                    <span class="text-green-500">Aktif</span>
                                                 @else
                                                     <div class="flex justify-center space-x-2">
-                                                        <button onclick="updateStatus('{{ route('user.approve', $user->id) }}', this)">
+                                                        <button onclick="updateStatus('{{ route('user.approve', $user->id) }}', this)" style="background: none; border: none;">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
                                                             </svg>
                                                         </button>
-                                                        <button onclick="updateStatus('{{ route('user.reject', $user->id) }}', this)">
+                                                        <button onclick="updateStatus('{{ route('user.reject', $user->id) }}', this)" style="background: none; border: none;">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-10.707a1 1 0 00-1.414-1.414L10 8.586 7.707 6.293a1 1 0 00-1.414 1.414L8.586 10l-2.293 2.293a1 1 0 101.414 1.414L10 11.414l2.293 2.293a1 1 0 001.414-1.414L11.414 10l2.293-2.293z" clip-rule="evenodd" />
                                                             </svg>
@@ -104,10 +106,58 @@
                                                     </div>
                                                 @endif
                                             </td>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                                <x-secondary-button
+                                                    x-data=""
+                                                    x-on:click.prevent="if (confirm('Apakah Anda yakin ingin menonaktifkan akun ini?')) { document.getElementById('deactivate-form-{{ $user->id }}').submit(); }"
+                                                    style="background: none; border: none;"
+                                                >
+                                                    <i class="fas fa-user-slash text-red-500 h-6 w-6 fa-2x"></i>
+                                                </x-secondary-button>
+
+                                                <form id="deactivate-form-{{ $user->id }}" method="POST" action="{{ route('user.deactivate', $user->id) }}" class="hidden">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="POST">
+                                                </form>
+                                            </td>
                                         </tr>
-                                    @endif
                                 @endforeach
-                                @foreach($users as $user)
+                          </tbody>
+                        </table>
+                    </div>
+                    <div class="py-4">
+    {{ $activeUsers->appends(['inactive_page' => $inactiveUsers->currentPage()])->links() }} <!-- Pagination untuk Akun Aktif -->
+</div>
+<!--TABEL NONAKTIF-->
+<div class="inline-block min-w-full shadow rounded-lg overflow-hidden mt-5">
+<h2 class="text-2xl font-bold leading-tight text-center gradient-text mb-6">
+    Akun Non Aktif
+</h2>
+                        <table id="inactive-users-table" class="min-w-full leading-normal">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Nama
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Email
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Tanggal Registrasi
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Role
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Status Akun
+                                    </th>
+                                    <th class="px-5 py-3 border border-abu bg-ketiga text-center text-base font-semibold text-black">
+                                        Kelola
+                                    </th> 
+                                </tr>
+                            </thead>
+                            <tbody id="inactive-user-table-body">
+                            @foreach($inactiveUsers as $user)
                                     @if ($user->persetujuan === 'deactivated')
                                         <tr class="bg-abu">
                                             <td class="px-5 py-5 border border-gray-200 text-sm text-center">
@@ -125,121 +175,61 @@
                                             <td class="px-5 py-5 border border-gray-200 text-sm text-center">
                                             <span class="text-red-500">Non Aktif</span>
                                             </td>
-                                        </tr>
+                                            <td class="px-5 py-5 border border-gray-200 text-sm text-center">
+                                        <x-secondary-button
+                                            x-data=""
+                                            x-on:click.prevent="if (confirm('Apakah Anda yakin ingin mengaktifkan kembali akun ini?')) { document.getElementById('deactivate-form-{{ $user->id }}').submit(); }"
+                                            style="background: none; border: none;"
+                                        >
+                                            <i class="fas fa-user-check text-green-500 h-6 w-6 fa-2x"></i>
+                                        </x-secondary-button>
+
+                                        <form id="deactivate-form-{{ $user->id }}" method="POST" action="{{ route('user.active', $user->id) }}" class="hidden">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="POST">
+                                        </form>
+                                    </td>
                                     @endif
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-  <div class="flex flex-1 justify-between sm:hidden">
-    @if ($users->onFirstPage())
-      <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Previous</span>
-    @else
-      <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
-    @endif
-
-    @if ($users->hasMorePages())
-      <a href="{{ $users->nextPageUrl() }}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
-    @else
-      <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed">Next</span>
-    @endif
-  </div>
-
-  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-    <div>
-      <p class="text-sm text-gray-700">
-        Showing
-        <span class="font-medium">{{ $users->firstItem() }}</span>
-        to
-        <span class="font-medium">{{ $users->lastItem() }}</span>
-        of
-        <span class="font-medium">{{ $users->total() }}</span>
-        results
-      </p>
-    </div>
-    <div>
-      <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-        @if ($users->onFirstPage())
-          <span class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-            <span class="sr-only">Previous</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-            </svg>
-          </span>
-        @else
-          <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-            <span class="sr-only">Previous</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-            </svg>
-          </a>
-        @endif
-
-        @foreach ($users->links()->elements as $element)
-          @if (is_string($element))
-            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300">{{ $element }}</span>
-          @elseif (is_array($element))
-            @foreach ($element as $page => $url)
-              @if ($page == $users->currentPage())
-                <span class="relative inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-gray-300">{{ $page }}</span>
-              @else
-                <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">{{ $page }}</a>
-              @endif
-            @endforeach
-          @endif
-        @endforeach
-
-        @if ($users->hasMorePages())
-          <a href="{{ $users->nextPageUrl() }}" class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-            <span class="sr-only">Next</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
-          </a>
-        @else
-          <span class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-            <span class="sr-only">Next</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
-          </span>
-        @endif
-      </nav>
-    </div>
-  </div>
+                    <div class="py-4">
+    {{ $inactiveUsers->appends(['active_page' => $activeUsers->currentPage()])->links() }} <!-- Pagination untuk Akun Non Aktif -->
 </div>
-
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-    function updateStatus(url, button) {
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const row = button.closest('tr');
-            const statusCell = row.querySelector('td:last-child');
+function updateStatus(url, button) {
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const row = button.closest('tr');
+        const statusCell = row.querySelector('td:last-child');
 
-            // Update the status cell based on the response
-            if (data.status === 'deactivated') {
-                row.classList.add('bg-abu');
-                row.classList.remove('bg-white');
-                statusCell.innerHTML = '<span class="text-red-500">Non Aktif</span>';
-            } else if (data.status === 'rejected') {
-                statusCell.innerHTML = '<span class="text-green-500">Aktif</span>';
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
+        // Update the status cell based on the response
+        if (data.status === 'deactivated') {
+            row.classList.add('bg-abu');
+            row.classList.remove('bg-white');
+            statusCell.innerHTML = '<span class="text-red-500">Non Aktif</span>';
+        } else if (data.status === 'rejected') {
+            statusCell.innerHTML = '<span class="text-green-500">Aktif</span>';
+        }
+
+        // Reload the page to reflect changes
+        location.reload();
+    })
+    .catch(error => console.error('Error:', error));
+}
+    
 </script>
 </x-app-layout>

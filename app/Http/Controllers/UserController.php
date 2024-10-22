@@ -10,11 +10,18 @@ class UserController extends Controller
 {
     public function index(Request $request)
 {
-    $search = $request->input('search');
+    $search = $request->input('search', ''); // Default ke string kosong jika tidak ada input
 
-    // Query dengan kondisi pencarian dan urutan
-    $users = User::query()
-        ->where(function($query) use ($search) {
+    $activePage = $request->input('active_page', 1);
+    $inactivePage = $request->input('inactive_page', 1);
+
+    // Query untuk mendapatkan pengguna aktif
+    $activeUsers = User::where(function($query) {
+        $query->where('persetujuan', NULL)
+              ->orWhere('persetujuan', 'deactivation_pending');
+    })
+                ->where('role', '!=', 'manajer')
+        ->when($search, function($query, $search) {
             $query->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('email', 'LIKE', "%{$search}%");
         })
@@ -23,19 +30,28 @@ class UserController extends Controller
             WHEN persetujuan = 'approved' THEN 2
             WHEN persetujuan = 'rejected' THEN 3
         END")
-        ->paginate(10);
+        ->paginate(10, ['*'], 'active_page', $activePage);
+
+    // Query untuk mendapatkan pengguna tidak aktif
+    $inactiveUsers = User::where('persetujuan', 'deactivated')
+        ->when($search, function($query, $search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+        })
+        ->paginate(10, ['*'], 'inactive_page', $inactivePage);
 
     if ($request->ajax()) {
         $permintaanactive = User::whereNull('persetujuan')->count();
         $asmen = User::where('role', 'asisten_manajer')
-                     ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                     ->whereNotNull('persetujuan')
                      ->count();
         $pekerjalapangan = User::where('role', 'pekerja_lapangan')
-                              ->whereNotNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                              ->whereNotNull('persetujuan')
                               ->count();
 
         return response()->json([
-            'users' => $users,
+            'activeUsers' => $activeUsers,
+            'inactiveUsers' => $inactiveUsers,
             'permintaanactive' => $permintaanactive,
             'asmen' => $asmen,
             'pekerjalapangan' => $pekerjalapangan,
@@ -44,14 +60,15 @@ class UserController extends Controller
 
     $permintaanactive = User::where('persetujuan', 'deactivated')->count();
     $asmen = User::where('role', 'asisten_manajer')
-                 ->whereNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                 ->whereNull('persetujuan')
                  ->count();
     $pekerjalapangan = User::where('role', 'pekerja_lapangan')
-                          ->whereNull('persetujuan')  // Hanya yang sudah disetujui atau ditolak
+                          ->whereNull('persetujuan')
                           ->count();
 
-    return view('manajer.permintaan_active', compact('users', 'permintaanactive', 'asmen', 'pekerjalapangan'));
+    return view('manajer.permintaan_active', compact('activeUsers', 'inactiveUsers', 'permintaanactive', 'asmen', 'pekerjalapangan'));
 }
+
 
 
     public function approve(User $user)
@@ -95,5 +112,14 @@ public function store(Request $request)
                      ->with('success', 'Akun berhasil dibuat.');
 }
    
+public function checkEmail(Request $request)
+    {
+        // Validasi input email
+        $request->validate(['email' => 'required|string|email']);
 
+        $email = $request->input('email');
+        $exists = User::where('email', $email)->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
 }

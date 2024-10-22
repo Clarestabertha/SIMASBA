@@ -128,36 +128,37 @@
     <div class="flex justify-center space-x-10 p-8">
         <!-- Card 1 -->
         <div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
-            <img src="/storage/img/orang2.png" alt="Orang 1" class="w-full">
-            <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                <p class="text-primary font-bold text-lg">Orang 1</p>
-                <p class="text-white text-xs">Manajer Bangunan Dinas</p>
-            </div>
-        </div>
+    <img src="/storage/img/5.png" alt="Orang 2" class="w-3/4 mx-auto">
+    <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <p class="text-primary font-bold text-lg">Yuni Edi</p>
+        <p class="text-white text-xs">Manajer Bangunan Dinas</p>
+    </div>
+</div>
 
         <div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
-            <img src="/storage/img/orang2.png" alt="Orang 2" class="w-full">
-            <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                <p class="text-primary font-bold text-lg">Orang 2</p>
-                <p class="text-white text-xs">Asisten Manajer Stasiun</p>
-            </div>
-        </div>
+    <img src="/storage/img/3.png" alt="Orang 2" class="w-3/4 mx-auto">
+    <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <p class="text-primary font-bold text-lg">Handrawan N.</p>
+        <p class="text-white text-xs">Asisten Manajer Stasiun</p>
+    </div>
+</div>
 
-        <div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
-            <img src="/storage/img/orang2.png" alt="Orang 3" class="w-full">
-            <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                <p class="text-primary font-bold text-lg">Orang 3</p>
-                <p class="text-white text-xs">Asisten Manajer Non Stasiun</p>
-            </div>
-        </div>
 
-        <div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
-            <img src="/storage/img/orang2.png" alt="Orang 4" class="w-full">
-            <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                <p class="text-primary font-bold text-lg">Orang 4</p>
-                <p class="text-white text-xs">Asisten Manajer ME</p>
-            </div>
-        </div>
+<div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
+    <img src="/storage/img/4.png" alt="Orang 2" class="w-3/4 mx-auto">
+    <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <p class="text-primary font-bold text-lg">Wendy A.</p>
+        <p class="text-white text-xs">Asisten Manajer Non Stasiun</p>
+    </div>
+</div>
+
+<div class="max-w-xs gradient-card-3 shadow-md rounded-lg overflow-hidden relative">
+    <img src="/storage/img/2.png" alt="Orang 2" class="w-3/4 mx-auto">
+    <div class="bg-secondary text-center p-3 w-3/4 absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <p class="text-primary font-bold text-lg">Adi Purwanto</p>
+        <p class="text-white text-xs">Asisten Manajer ME</p>
+    </div>
+</div>
     </div>
 
     <script>

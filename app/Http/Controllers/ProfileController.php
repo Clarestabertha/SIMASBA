@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User; 
 
 class ProfileController extends Controller
 {
@@ -58,29 +59,63 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function deactivate(Request $request): RedirectResponse
+    /**
+     * Deactivate a user's account.
+     */
+    public function deactivate(Request $request, $id): RedirectResponse
 {
-    // Validasi password pengguna yang ingin menonaktifkan akun
-    $request->validateWithBag('userDeactivation', [
-        'password' => ['required', 'current_password'],
-    ]);
+    // Cari pengguna berdasarkan ID
+    $userToDeactivate = User::findOrFail($id);
 
-    // Dapatkan pengguna yang sedang login
-    $user = $request->user();
+    // Cek apakah yang sedang login adalah manajer
+    if ($request->user()->is_manager) {
+        // Manajer bisa langsung menonaktifkan akun pengguna
+        $userToDeactivate->update([
+            'persetujuan' => 'deactivated', // Menandai akun sebagai dinonaktifkan
+        ]);
 
-    // Update kolom persetujuan menjadi 'deactivation_pending' untuk menandai permintaan
-    $user->update([
-        'persetujuan' => 'deactivation_pending',
-    ]);
+        // Redirect pengguna kembali ke halaman profil mereka dengan notifikasi
+        return Redirect::route('permintaan_active')->with('status', 'Akun pengguna telah dinonaktifkan.');
+    } else {
+        // Validasi password pengguna yang ingin menonaktifkan akun
+        $request->validateWithBag('userDeactivation', [
+            'password' => ['required', 'current_password'],
+        ]);
 
-    // Logout pengguna setelah mengajukan permintaan nonaktif
-    Auth::logout();
+        // Update kolom persetujuan untuk menandai permintaan
+        $request->user()->update([
+            'persetujuan' => 'deactivation_pending',
+        ]);
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        // Logout pengguna
+        Auth::logout();
 
-    // Redirect pengguna ke halaman awal dengan notifikasi
-    return Redirect::to('/')->with('status', 'Permintaan nonaktifkan akun telah diajukan dan menunggu persetujuan.');
+        // Redirect pengguna ke halaman awal dengan notifikasi
+        return Redirect::to('/')->with('status', 'Permintaan nonaktifkan akun telah diajukan dan menunggu persetujuan.');
+    }
 }
-    
+/**
+ * Reactivate a user's account.
+ */
+public function active(Request $request, $id): RedirectResponse
+{
+    // Cari pengguna berdasarkan ID
+    $userToReactivate = User::findOrFail($id);
+
+    // Cek apakah yang sedang login adalah manajer
+    if ($request->user()->is_manager) {
+        // Manajer bisa langsung mengaktifkan kembali akun pengguna
+        $userToReactivate->update([
+            'persetujuan' => NULL, // Menandai akun sebagai diaktifkan kembali
+        ]);
+
+        // Redirect pengguna kembali ke halaman profil atau daftar pengguna dengan notifikasi
+        return Redirect::route('permintaan_active')->with('status', 'Akun pengguna telah diaktifkan kembali.');
+    }
+
+    // Jika bukan manajer, kembalikan respons dengan status tidak diizinkan
+    return Redirect::route('permintaan_active')->with('error', 'Anda tidak memiliki izin untuk mengaktifkan akun.');
+}
+
+
 }

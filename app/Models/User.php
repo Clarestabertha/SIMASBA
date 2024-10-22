@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function getIsManagerAttribute()
+    {
+        return $this->role === 'manajer'; // Pastikan nilai role sesuai dengan yang Anda gunakan
+    }
 }

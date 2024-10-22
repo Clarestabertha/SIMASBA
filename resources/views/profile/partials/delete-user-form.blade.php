@@ -15,7 +15,7 @@
     >{{ __('Non Aktifkan Akun') }}</x-secondary-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.deactivate') }}" class="p-6">
+        <form method="post" action="{{ route('user.deactivate', $user->id) }}" class="p-6">
             @csrf
 
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">

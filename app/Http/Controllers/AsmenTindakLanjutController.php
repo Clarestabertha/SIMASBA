@@ -11,9 +11,28 @@ class AsmenTindakLanjutController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $disetujuiPage = $request->input('disetujui_page', 1);
+        $ditolakPage = $request->input('ditolak_page', 1);
 
-        // Query dengan kondisi pencarian
-        $tindaklanjut = Tindaklanjut::query()
+        $disetujui = Tindaklanjut::query()
+            ->whereIn('status', ['sedang diproses', 'disetujui', 'disetujui_asisten'])
+            ->where(function($query) use ($search) {
+                $query->where('nama_pelapor', 'LIKE', "%{$search}%")
+                      ->orWhere('tanggal', 'LIKE', "%{$search}%")
+                      ->orWhere('lokasi', 'LIKE', "%{$search}%")
+                      ->orWhere('personel', 'LIKE', "%{$search}%")
+                      ->orWhere('sumber', 'LIKE', "%{$search}%");
+            })
+            ->orderByRaw("CASE 
+            WHEN status = 'sedang diproses' THEN 1 
+            WHEN status = 'disetujui_asisten' THEN 2 
+            ELSE 3 
+            END")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'disetujui_page', $disetujuiPage);
+            
+        $ditolak = Tindaklanjut::query()
+            ->whereIn('status', ['ditolak','ditolak_asisten'])
             ->where(function($query) use ($search) {
                 $query->where('nama_pelapor', 'LIKE', "%{$search}%")
                       ->orWhere('tanggal', 'LIKE', "%{$search}%")
@@ -22,9 +41,9 @@ class AsmenTindakLanjutController extends Controller
                       ->orWhere('sumber', 'LIKE', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10); // Gunakan paginate() langsung setelah query builder
+            ->paginate(10, ['*'], 'ditolak_page', $ditolakPage);
 
-        return view('asmen.tindaklanjut', compact('tindaklanjut'));
+            return view('asmen.tindaklanjut', compact('disetujui', 'ditolak'));
     }
     public function show($id_tl)
 {

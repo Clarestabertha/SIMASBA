@@ -11,8 +11,26 @@ class KerusakanController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $disetujuiPage = $request->input('disetujui_page', 1);
+        $ditolakPage = $request->input('ditolak_page', 1);
 
-        $kerusakan = Kerusakan::query()
+        $disetujui = Kerusakan::query()
+        ->whereIn('status', ['disetujui', 'disetujui_asisten'])
+            ->where(function($query) use ($search) {
+                $query->where('nama_pelapor', 'LIKE', "%{$search}%")
+                      ->orWhere('tanggal', 'LIKE', "%{$search}%")
+                      ->orWhere('sumber_laporan', 'LIKE', "%{$search}%")
+                      ->orWhere('lokasi', 'LIKE', "%{$search}%");
+            })
+            ->orderByRaw("CASE 
+            WHEN status = 'disetujui_asisten' THEN 1
+            ELSE 2 
+          END")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'disetujui_page', $disetujuiPage);
+
+        $ditolak = Kerusakan::query()
+        ->whereIn('status', ['ditolak','ditolak_asisten'])
             ->where(function($query) use ($search) {
                 $query->where('nama_pelapor', 'LIKE', "%{$search}%")
                       ->orWhere('tanggal', 'LIKE', "%{$search}%")
@@ -20,9 +38,9 @@ class KerusakanController extends Controller
                       ->orWhere('lokasi', 'LIKE', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10, ['*'], 'ditolak_page', $ditolakPage);
 
-        return view('manajer.kerusakan', compact('kerusakan'));
+            return view('manajer.kerusakan', compact('disetujui', 'ditolak'));
     }
 
     public function show($id)
@@ -72,23 +90,26 @@ class KerusakanController extends Controller
         $kerusakan->save();
         return redirect()->route('kerusakan', $kerusakan->id_kerusakan);    }
 }
-    public function rejectByAsisten($id_kerusakan)
+
+    public function rejectByAsisten(Request $request, $id_kerusakan)
     {
         $kerusakan = Kerusakan::findOrFail($id_kerusakan);
 
         if ($kerusakan->status === 'sedang diproses') {
             $kerusakan->status = 'ditolak_asisten';
+            $kerusakan->alasan = $request->alasan;
             $kerusakan->save();
             return redirect()->route('kerusakan.asisten_manajer', $kerusakan->id_kerusakan);    
         }
     }
 
-    public function rejectByManajer($id_kerusakan)
+    public function rejectByManajer(Request $request, $id_kerusakan)
     {
         $kerusakan = Kerusakan::findOrFail($id_kerusakan);
 
-        if ($kerusakan->status === 'ditolak_asisten') {
+        if (in_array($kerusakan->status, ['ditolak_asisten', 'disetujui_asisten'])) {
             $kerusakan->status = 'ditolak';
+            $kerusakan->alasan = $request->alasan;
             $kerusakan->save();
             return redirect()->route('kerusakan', $kerusakan->id_kerusakan);    
         }
